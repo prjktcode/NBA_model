@@ -29,6 +29,8 @@ Provides a Flask application to display the predicted scores in a user-friendly 
 
 
 **How to Use**
+
+
 **Prerequisites:**
 
 Python 3.x with libraries like pandas, numpy, XGBoost, scikit-learn, requests, tabulate, and Flask installed.
