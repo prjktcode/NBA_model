@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NBA Predictions</title>
+</head>
+<body>
+    <h1>NBA Predictions</h1>
+    
+    <form action="/today_fixtures" method="post">
+        <button type="submit">Today's Fixtures</button>
+    </form>
+
+    <form action="/today_predictions" method="post">
+        <button type="submit">Today's Predictions</button>
+    </form>
+
+    {% if content %}
+        <h2>Results:</h2>
+        <ul>
+            {% for item in content %}
+                <li>{{ item }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>
