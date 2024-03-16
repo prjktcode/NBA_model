@@ -1,0 +1,10 @@
+pandas
+numpy
+requests
+tabulate
+python-dateutil
+nba_api
+scikit-learn
+xgboost
+flask
+gunicorn
