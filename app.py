@@ -46,6 +46,12 @@ def get_game_log_data(season, timeout=3000):
         print("The request to NBA API timed out while fetching game logs for the specified season. Please try again later.")
         return None
 
+# Request the game logs for the specified season with a timeout of 30 seconds
+game_log_data = get_game_log_data(season)
+if game_log_data is not None:
+    # Proceed with further processing
+    print(game_log_data)
+
 # Specify the season you're interested in
 season = '2023-24'
 
