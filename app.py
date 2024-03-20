@@ -4,6 +4,7 @@ import numpy as np
 import json
 import time
 import requests
+from requests.exceptions import Timeout
 
 from tabulate import tabulate
 from datetime import datetime, timezone
@@ -20,16 +21,6 @@ from sklearn.metrics import mean_absolute_error, r2_score, mean_squared_error
 import pickle
 
 from flask import Flask, render_template
-
-# %%
-# Get a list of all NBA teams
-all_teams = teams.get_teams()
-
-# Function to print list of teams
-def print_teams(team_list):
-    print(tabulate(team_list, headers='keys', tablefmt='grid'))
-
-print_teams(all_teams)
 
 # %%
 # Query NBA scoreboard and list games in local time zone
