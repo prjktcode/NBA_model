@@ -1,26 +1,22 @@
 # %%
 import pandas as pd
-import numpy as np
-import json
-import time
-import requests
-from requests.exceptions import Timeout
 
 from tabulate import tabulate
-from datetime import datetime, timezone
+from datetime import timezone
 from dateutil import parser
+from requests.exceptions import Timeout
 
 from nba_api.stats.static import teams
 from nba_api.stats.endpoints import LeagueGameLog
 from nba_api.live.nba.endpoints import scoreboard
 
-from sklearn.preprocessing import StandardScaler, LabelEncoder
+from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
-from xgboost import XGBRegressor, XGBClassifier
-from sklearn.metrics import mean_absolute_error, r2_score, mean_squared_error
+from xgboost import XGBRegressor
 import pickle
 
 from flask import Flask, render_template
+
 
 # %%
 # Query NBA scoreboard and list games in local time zone
@@ -46,21 +42,18 @@ def get_game_log_data(season, timeout=3000):
         print("The request to NBA API timed out while fetching game logs for the specified season. Please try again later.")
         return None
 
+# Specify the season you're interested in
+season = '2023-24'
+
 # Request the game logs for the specified season with a timeout of 30 seconds
 game_log_data = get_game_log_data(season)
 if game_log_data is not None:
     # Proceed with further processing
     print(game_log_data)
 
-# Specify the season you're interested in
-season = '2023-24'
-
 # Drop irrelevant columns
 columns_to_drop = ['SEASON_ID', 'GAME_ID', 'GAME_DATE', 'VIDEO_AVAILABLE', 'MIN', 'MATCHUP', 'TEAM_NAME', 'TEAM_ABBREVIATION']
 game_log_data.drop(columns=columns_to_drop, inplace=True)
-
-# Print game log data
-print(tabulate(game_log_data.tail(10), headers='keys', tablefmt='grid'))
 
 # %%
 # Initialize LabelEncoder
@@ -76,8 +69,6 @@ game_log_data.drop(columns=['WL'], inplace=True)
 missing_values = game_log_data.isnull().sum()
 print("Missing Values:")
 print(missing_values)
-
-
 
 # %%
 # Separate features (X) and target variable (y)
@@ -102,29 +93,6 @@ xgb_regressor.fit(X_train, y_train)
 
 # Predict the target variable on the test data
 y_pred = xgb_regressor.predict(X_test)
-
-
-
-# %%
-from sklearn.metrics import mean_absolute_error, r2_score, mean_squared_error
-import numpy as np
-
-# Calculate mean squared error
-mse = mean_squared_error(y_test, y_pred)
-print("Mean Squared Error:", mse)
-
-# Calculate root mean squared error (RMSE)
-rmse = np.sqrt(mse)
-print("Root Mean Squared Error:", rmse)
-
-# Calculate mean absolute error (MAE)
-mae = mean_absolute_error(y_test, y_pred)
-print("Mean Absolute Error:", mae)
-
-# Calculate R-squared (R2) score
-r2 = r2_score(y_test, y_pred)
-print("R-squared (R2) Score:", r2)
-
 
 # %%
 # Save the trained model to a file
