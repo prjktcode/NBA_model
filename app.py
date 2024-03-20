@@ -35,15 +35,19 @@ def get_games():
 
 get_games()
 
-# %%
+def get_game_log_data(season, timeout=3000):
+    try:
+        # Make the API request with timeout
+        game_log = LeagueGameLog(season=season, timeout=timeout)
+        game_log_data = game_log.get_data_frames()[0]
+        return game_log_data
+    except Timeout:
+        # Handle timeout error
+        print("The request to NBA API timed out while fetching game logs for the specified season. Please try again later.")
+        return None
+
 # Specify the season you're interested in
 season = '2023-24'
-
-# Request the game logs for the specified season
-game_log = LeagueGameLog(season=season)
-
-# Get the data
-game_log_data = game_log.get_data_frames()[0]
 
 # Drop irrelevant columns
 columns_to_drop = ['SEASON_ID', 'GAME_ID', 'GAME_DATE', 'VIDEO_AVAILABLE', 'MIN', 'MATCHUP', 'TEAM_NAME', 'TEAM_ABBREVIATION']
